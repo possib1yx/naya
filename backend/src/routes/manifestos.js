@@ -1,0 +1,158 @@
+const express = require('express');
+const router = express.Router();
+const db = require('../db');
+
+// Get trending manifestos
+router.get('/trending', async (req, res) => {
+  try {
+    const manifestosSnapshot = await db.collection('manifestos').limit(20).get();
+    
+    const manifestos = [];
+    manifestosSnapshot.forEach(doc => {
+      manifestos.push({ id: doc.id, ...doc.data() });
+    });
+
+    // Score = voteCount + commentCount (simplified)
+    const trending = manifestos
+      .sort((a, b) => ((b.voteCount || 0) + (b.commentCount || 0)) - ((a.voteCount || 0) + (a.commentCount || 0)))
+      .slice(0, 5);
+
+    res.json(trending);
+  } catch (error) {
+    console.error('Error fetching trending manifestos:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get Top manifestos (Top Ideas)
+router.get('/top', async (req, res) => {
+  try {
+    const manifestosSnapshot = await db.collection('manifestos')
+      .get();
+    
+    const manifestos = [];
+    manifestosSnapshot.forEach(doc => {
+      manifestos.push({ id: doc.id, ...doc.data() });
+    });
+
+    manifestos.sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
+    res.json(manifestos.slice(0, 10));
+  } catch (error) {
+    console.error('Error fetching top manifestos:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get all manifestos
+router.get('/', async (req, res) => {
+  try {
+    const manifestosSnapshot = await db.collection('manifestos').get();
+    const manifestos = [];
+    manifestosSnapshot.forEach(doc => {
+      manifestos.push({ id: doc.id, ...doc.data() });
+    });
+    manifestos.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    res.json(manifestos);
+  } catch (error) {
+    console.error('Error fetching manifestos:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get single manifesto
+router.get('/:id', async (req, res) => {
+  try {
+    const manifestoDoc = await db.collection('manifestos').doc(req.params.id).get();
+    
+    if (!manifestoDoc.exists) {
+      return res.status(404).json({ error: 'Manifesto not found' });
+    }
+
+    const manifesto = { id: manifestoDoc.id, ...manifestoDoc.data() };
+
+    // Fetch comments (FLAT COLLECTION)
+    const commentsSnapshot = await db.collection('comments')
+      .where('manifestoId', '==', req.params.id)
+      .get();
+      
+    const comments = [];
+    commentsSnapshot.forEach(doc => {
+      comments.push({ id: doc.id, ...doc.data() });
+    });
+
+    // Sort in memory
+    comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    manifesto.comments = comments;
+    res.json(manifesto);
+  } catch (error) {
+    console.error('Error fetching manifesto:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Create manifesto
+router.post('/', async (req, res) => {
+  const { title, description, category, userId } = req.body;
+  try {
+    const manifestoRef = db.collection('manifestos').doc();
+    const manifestoData = {
+      title,
+      description,
+      category: category || "Discussion",
+      createdById: userId || req.body.createdById,
+      createdAt: new Date().toISOString(),
+      commentCount: 0,
+      voteCount: 0
+    };
+
+    await manifestoRef.set(manifestoData);
+    
+    res.status(201).json({ id: manifestoRef.id, ...manifestoData });
+  } catch (error) {
+    console.error('Error creating manifesto:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete manifesto
+router.delete('/:id', async (req, res) => {
+  console.log(`[DELETE DEBUG] Attempting to delete manifesto: ${req.params.id}`);
+  try {
+    const docRef = db.collection('manifestos').doc(req.params.id);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ error: 'Manifesto not found' });
+    }
+
+    // 1. Find all comments related to this manifesto in the flat collection
+    const commentsSnapshot = await db.collection('comments')
+      .where('manifestoId', '==', req.params.id)
+      .get();
+    
+    // 2. Delete all related comments and their votes
+    const batch = db.batch();
+    for (const commentDoc of commentsSnapshot.docs) {
+      const vSnap = await commentDoc.ref.collection('votes').get();
+      vSnap.forEach(vDoc => batch.delete(vDoc.ref));
+      batch.delete(commentDoc.ref);
+    }
+    
+    // 3. Delete manifesto's own votes (if any - assuming top-level votes exists)
+    const votesSnapshot = await docRef.collection('votes').get();
+    votesSnapshot.forEach(vDoc => batch.delete(vDoc.ref));
+
+    // 4. Delete the manifesto document
+    batch.delete(docRef);
+    await batch.commit();
+
+    console.log(`[DELETE DEBUG] Successfully deleted manifesto: ${req.params.id}`);
+    res.json({ message: 'Vision erased successfully' });
+  } catch (error) {
+    console.error('Error deleting manifesto:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+module.exports = router;

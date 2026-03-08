@@ -18,27 +18,6 @@ app.use('/api/top', require('./routes/top'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/notifications', require('./routes/notifications'));
 
-// Test Notification Trigger
-app.post('/api/test-notify/:userId', async (req, res) => {
-  const { userId } = req.params;
-  const db = require('./db');
-  try {
-    await db.collection('notifications').add({
-      recipientId: userId,
-      senderId: 'system',
-      senderName: 'System Test',
-      type: 'COMMENT',
-      manifestoId: 'test-man',
-      contentPreview: 'This is a test notification',
-      isRead: false,
-      createdAt: new Date().toISOString()
-    });
-    res.json({ message: 'Test notification sent' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error('[GLOBAL ERROR]', err.stack);

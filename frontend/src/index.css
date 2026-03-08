@@ -121,6 +121,43 @@ button {
   transform: translateY(-2px);
 }
 
+.premium-input {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  background: var(--surface-1);
+  color: #000000 !important;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.premium-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(202, 138, 4, 0.1);
+}
+
+.premium-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Force text color for generic inputs */
+input, textarea {
+  color: #000000;
+}
+
+/* Robust Autofill Fix */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #000000 !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 .btn-premium {
   background: linear-gradient(135deg, var(--secondary) 0%, #991b1b 100%);
   color: white;

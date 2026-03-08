@@ -9,6 +9,7 @@ router.get('/:userId', async (req, res) => {
   try {
     const snapshot = await db.collection('notifications')
       .where('recipientId', '==', userId)
+      .orderBy('createdAt', 'desc')
       .limit(20)
       .get();
 

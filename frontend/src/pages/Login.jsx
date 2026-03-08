@@ -47,8 +47,12 @@ const Login = () => {
     return (
       <div style={{ maxWidth: '400px', margin: '80px auto' }}>
         <div className="glass-card animate-fade-in" style={{ padding: '40px', textAlign: 'center' }}>
-          <img src={user.photoURL || 'https://via.placeholder.com/80'} alt={user.displayName} style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '20px' }} />
-          <h2 style={{ marginBottom: '10px' }}>Namaste, {user.displayName || user.email}!</h2>
+          <img 
+            src={user.photoURL || `https://api.dicebear.com/7.x/identicon/svg?seed=${user.uid}`} 
+            alt={user.displayName} 
+            style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '20px', border: '3px solid var(--secondary)', padding: '3px' }} 
+          />
+          <h2 style={{ marginBottom: '10px' }}>Namaste, {user.displayName || user.email.split('@')[0]}!</h2>
           <p style={{ color: 'var(--text-muted)', marginBottom: '30px' }}>You are signed in.</p>
           <button className="btn-primary" style={{ width: '100%' }} onClick={() => navigate('/')}>Go to Home</button>
         </div>
@@ -67,29 +71,25 @@ const Login = () => {
 
         <form onSubmit={handleEmailAuth}>
           <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 700, fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '1px' }}>EMAIL DOMAIN</label>
+            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 700, fontSize: '0.75rem', color: 'var(--primary)', letterSpacing: '1px' }}>EMAIL</label>
             <input
               type="email"
               placeholder="strategic@janaawaz.gov"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{ width: '100%', padding: '14px', borderRadius: 'var(--radius-md)', border: '1px solid var(--glass-border)', background: 'var(--surface-1)', color: 'white', outline: 'none', transition: 'border-color 0.3s' }}
-              onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
-              onBlur={(e) => e.target.style.borderColor = 'var(--glass-border)'}
+              className="premium-input"
             />
           </div>
           <div style={{ marginBottom: '32px' }}>
-            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 700, fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '1px' }}>ACCESS CREDENTIAL</label>
+            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 700, fontSize: '0.75rem', color: 'var(--primary)', letterSpacing: '1px' }}>PASSWORD</label>
             <input
               type="password"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              style={{ width: '100%', padding: '14px', borderRadius: 'var(--radius-md)', border: '1px solid var(--glass-border)', background: 'var(--surface-1)', color: 'white', outline: 'none', transition: 'border-color 0.3s' }}
-              onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
-              onBlur={(e) => e.target.style.borderColor = 'var(--glass-border)'}
+              className="premium-input"
             />
           </div>
           <button className="btn-premium" style={{ width: '100%', padding: '16px', background: 'var(--accent)', color: 'black' }}>

@@ -21,6 +21,49 @@ router.post('/', async (req, res) => {
 
     await commentRef.set(commentData);
 
+    // 1. Notify manifesto owner (if not the same person)
+    const manifestoDoc = await db.collection('manifestos').doc(manifestoId).get();
+    if (manifestoDoc.exists) {
+      const manifestoData = manifestoDoc.data();
+      const manifestoOwnerId = manifestoData.createdById;
+      
+      if (manifestoOwnerId && manifestoOwnerId !== userId && manifestoOwnerId !== 'SYSTEM') {
+        await db.collection('notifications').add({
+          recipientId: manifestoOwnerId,
+          senderId: userId,
+          senderName: commentData.authorName,
+          type: 'COMMENT',
+          manifestoId,
+          contentPreview: content.substring(0, 50),
+          isRead: false,
+          createdAt: new Date().toISOString()
+        });
+      }
+    }
+
+    // 2. Notify parent comment owner (if reply and not same person)
+    if (parentId) {
+      const parentDoc = await db.collection('comments').doc(parentId).get();
+      if (parentDoc.exists) {
+        const parentData = parentDoc.data();
+        const parentOwnerId = parentData.userId;
+        
+        if (parentOwnerId && parentOwnerId !== userId && parentOwnerId !== 'SYSTEM') {
+          await db.collection('notifications').add({
+            recipientId: parentOwnerId,
+            senderId: userId,
+            senderName: commentData.authorName,
+            type: 'REPLY',
+            manifestoId,
+            commentId: parentId,
+            contentPreview: content.substring(0, 50),
+            isRead: false,
+            createdAt: new Date().toISOString()
+          });
+        }
+      }
+    }
+
     // Increment commentCount on manifesto
     await db.collection('manifestos').doc(manifestoId).update({
       commentCount: admin.firestore.FieldValue.increment(1)

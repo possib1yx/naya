@@ -69,13 +69,48 @@ const Layout = ({ children }) => {
                             key={n.id} 
                             to={`/manifesto/${n.manifestoId}`}
                             onClick={() => { markAsRead(n.id); setShowNotifications(false); }}
-                            style={{ display: 'block', textDecoration: 'none', padding: '12px', borderRadius: 'var(--radius-sm)', marginBottom: '8px', background: n.isRead ? 'transparent' : 'rgba(220, 38, 38, 0.05)', border: '1px solid', borderColor: n.isRead ? 'transparent' : 'rgba(220, 38, 38, 0.1)' }}
+                            style={{ 
+                              display: 'block', 
+                              textDecoration: 'none', 
+                              padding: '12px', 
+                              borderRadius: 'var(--radius-sm)', 
+                              marginBottom: '8px', 
+                              background: n.isRead ? 'transparent' : 'rgba(220, 38, 38, 0.03)', 
+                              border: '1px solid', 
+                              borderColor: n.isRead ? 'var(--glass-border)' : 'rgba(220, 38, 38, 0.1)',
+                              transition: 'all 0.2s'
+                            }}
                           >
-                            <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '4px' }}>
-                              <span style={{ fontWeight: 800, color: 'var(--secondary)' }}>{n.senderName}</span> {getNotificationText(n)}
+                            <div style={{ 
+                              fontSize: '0.85rem', 
+                              color: n.isRead ? 'var(--text-muted)' : 'var(--text-primary)', 
+                              marginBottom: '4px',
+                              fontWeight: n.isRead ? 400 : 600
+                            }}>
+                              <span style={{ 
+                                fontWeight: 800, 
+                                color: n.isRead ? 'var(--text-muted)' : 'var(--secondary)' 
+                              }}>{n.senderName}</span> {getNotificationText(n)}
                             </div>
-                            {n.contentPreview && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>"{n.contentPreview}..."</div>}
-                            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '4px', fontWeight: 600 }}>{new Date(n.createdAt).toLocaleDateString()}</div>
+                            {n.contentPreview && (
+                              <div style={{ 
+                                fontSize: '0.75rem', 
+                                color: 'var(--text-muted)', 
+                                fontStyle: 'italic',
+                                opacity: n.isRead ? 0.6 : 1
+                              }}>
+                                "{n.contentPreview}..."
+                              </div>
+                            )}
+                            <div style={{ 
+                              fontSize: '0.65rem', 
+                              color: 'var(--text-muted)', 
+                              marginTop: '4px', 
+                              fontWeight: 600,
+                              opacity: n.isRead ? 0.5 : 0.8
+                            }}>
+                              {new Date(n.createdAt).toLocaleDateString()}
+                            </div>
                           </Link>
                         ))
                       )}

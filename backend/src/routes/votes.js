@@ -64,6 +64,36 @@ router.post('/', async (req, res) => {
       voteCount: admin.firestore.FieldValue.increment(voteChange)
     });
 
+    // 1. Notify content owner (if not the same person and new vote or vote change)
+    if (voteChange !== 0) {
+      const targetDoc = await targetRef.get();
+      if (targetDoc.exists) {
+        const targetData = targetDoc.data();
+        const contentOwnerId = commentId ? targetData.userId : targetData.createdById;
+        
+        if (contentOwnerId && contentOwnerId !== userId && contentOwnerId !== 'SYSTEM') {
+          // Get sender's name
+          let senderName = 'Someone';
+          const senderDoc = await db.collection('users').doc(userId).get();
+          if (senderDoc.exists) {
+            senderName = senderDoc.data().username || 'User';
+          }
+
+          await db.collection('notifications').add({
+            recipientId: contentOwnerId,
+            senderId: userId,
+            senderName: senderName,
+            type: 'VOTE',
+            manifestoId,
+            commentId: commentId || null,
+            voteType: voteType,
+            isRead: false,
+            createdAt: new Date().toISOString()
+          });
+        }
+      }
+    }
+
     res.status(200).json({ message: 'Vote recorded', voteType, newVoteChange: voteChange });
   } catch (error) {
     console.error('Error recording vote:', error);

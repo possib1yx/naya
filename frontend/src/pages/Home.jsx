@@ -14,27 +14,56 @@ const Home = () => {
   const [topComments, setTopComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const MAX_RETRIES = 4;
+  const RETRY_DELAY = 5000; // 5 seconds between retries
 
-  const fetchData = async () => {
+  const fetchData = async (attempt = 0) => {
     try {
-      const [all, trend, top] = await Promise.all([
-        fetch(`${API_URL}/manifestos`).then(res => res.ok ? res.json() : Promise.reject('Failed to fetch manifestos')),
-        fetch(`${API_URL}/manifestos/trending`).then(res => res.ok ? res.json() : Promise.reject('Failed to fetch trending topics')),
-        fetch(`${API_URL}/top/daily`).then(res => res.ok ? res.json() : [])
+      const [manifestoRes, trendRes, topRes] = await Promise.all([
+        fetch(`${API_URL}/manifestos`),
+        fetch(`${API_URL}/manifestos/trending`),
+        fetch(`${API_URL}/top/daily`)
       ]);
+
+      // Server is reachable — check if it returned errors
+      if (!manifestoRes.ok) {
+        const errData = await manifestoRes.json().catch(() => ({}));
+        const isQuota = errData?.error?.includes('Quota') || errData?.error?.includes('RESOURCE_EXHAUSTED');
+        setError(isQuota
+          ? '⚠️ Firebase daily read quota has been reached. Data will be available again in a few hours.'
+          : `Server error: ${errData.error || manifestoRes.statusText}`
+        );
+        setLoading(false);
+        return;
+      }
+
+      const [all, trend, top] = await Promise.all([
+        manifestoRes.json(),
+        trendRes.json().catch(() => []),
+        topRes.json().catch(() => [])
+      ]);
+
       setManifestos(Array.isArray(all) ? all : []);
       setTrending(Array.isArray(trend) ? trend : []);
       setTopComments(Array.isArray(top) ? top : []);
+      setError(null);
       setLoading(false);
     } catch (err) {
+      // Network error — server is unreachable (cold start)
       console.error(err);
-      setError(`Could not connect to the backend at ${API_URL}. Please check your VITE_API_URL setting on Vercel.`);
-      setLoading(false);
+      if (attempt < MAX_RETRIES) {
+        setRetryCount(attempt + 1);
+        setTimeout(() => fetchData(attempt + 1), RETRY_DELAY);
+      } else {
+        setError(`Could not connect to the server. It may be starting up — please refresh in 30 seconds.`);
+        setLoading(false);
+      }
     }
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(0);
   }, []);
 
   const handleTopicVote = async (topicId, voteType) => {
@@ -127,6 +156,30 @@ const Home = () => {
     }
   };
 
+
+  if (loading) return (
+    <div style={{ textAlign: 'center', padding: '120px 40px', color: 'var(--text-muted)' }}>
+      <div style={{ fontSize: '2.5rem', marginBottom: '24px', animation: 'spin 1s linear infinite', display: 'inline-block' }}>⚙️</div>
+      <h2 style={{ color: 'var(--primary)', marginBottom: '12px', fontSize: '1.5rem' }}>Starting up...</h2>
+      {retryCount > 0 ? (
+        <p style={{ fontWeight: 500 }}>The server is waking up (attempt {retryCount}/{MAX_RETRIES}). This takes about 30 seconds on first load.</p>
+      ) : (
+        <p style={{ fontWeight: 500 }}>Loading JanAawaz platform...</p>
+      )}
+      <div style={{ marginTop: '32px', width: '200px', height: '4px', background: 'var(--surface-2)', borderRadius: '100px', margin: '32px auto 0' }}>
+        <div style={{ height: '100%', borderRadius: '100px', background: 'var(--secondary)', width: `${(retryCount / MAX_RETRIES) * 100}%`, transition: 'width 0.5s ease' }}></div>
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div style={{ textAlign: 'center', padding: '120px 40px' }}>
+      <p style={{ color: '#dc2626', fontWeight: 600, marginBottom: '16px' }}>⚠️ {error}</p>
+      <button className="btn-premium" onClick={() => { setLoading(true); setRetryCount(0); fetchData(0); }}>
+        RETRY
+      </button>
+    </div>
+  );
 
   return (
     <>

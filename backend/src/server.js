@@ -17,6 +17,7 @@ app.use('/api/votes', require('./routes/votes'));
 app.use('/api/top', require('./routes/top'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/chat', require('./routes/chat'));
 
 // Global Error Handler
 app.use((err, req, res, next) => {

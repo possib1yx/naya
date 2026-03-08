@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // User Profiles
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Manifestos (Visions)
+    match /manifestos/{manifestoId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (resource.data.createdById == request.auth.uid || request.auth.token.admin == true);
+    }
+    
+    // Comments
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (resource.data.userId == request.auth.uid || request.auth.token.admin == true);
+    }
+
+    // Conversations
+    match /conversations/{conversationId} {
+      allow read, write: if request.auth != null && request.auth.uid in resource.data.users;
+      allow create: if request.auth != null;
+      
+      // Messages Sub-collection
+      match /messages/{messageId} {
+        allow read, write: if request.auth != null && (
+          get(/databases/$(database)/documents/conversations/$(conversationId)).data.users.hasAny([request.auth.uid])
+        );
+      }
+    }
+    
+    // Blocked Users
+    match /blocked_users/{blockId} {
+      allow read, write: if request.auth != null && (resource.data.user_id == request.auth.uid || request.auth.uid == request.resource.data.user_id);
+    }
+
+    // Notifications
+    match /notifications/{notificationId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow write: if request.auth != null;
+    }
+
+    // Votes
+    match /votes/{voteId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}

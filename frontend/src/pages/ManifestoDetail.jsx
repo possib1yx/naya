@@ -191,29 +191,59 @@ const ManifestoDetail = () => {
           <div className="glass-effect" style={{ padding: '32px', background: 'var(--surface-1)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div style={{ 
-                  width: '40px', 
-                  height: '40px', 
-                  borderRadius: '12px', 
-                  background: comment.isAnonymous ? 'var(--surface-2)' : 'var(--secondary)', 
-                  color: 'white', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  fontWeight: 800, 
-                  fontSize: '0.9rem',
-                  border: '1px solid var(--glass-border)'
-                }}>
-                  {initial}
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.95rem', letterSpacing: '0.5px' }}>
-                    {displayName}
-                  </span>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                    {new Date(comment.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
+                {!comment.isAnonymous ? (
+                  <Link to={`/profile/${comment.userId}`} style={{ display: 'flex', alignItems: 'center', gap: '16px', textDecoration: 'none' }}>
+                    <div style={{ 
+                      width: '40px', 
+                      height: '40px', 
+                      borderRadius: '12px', 
+                      background: 'var(--secondary)', 
+                      color: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      fontWeight: 800, 
+                      fontSize: '0.9rem',
+                      border: '1px solid var(--glass-border)'
+                    }}>
+                      {initial}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.95rem', letterSpacing: '0.5px' }}>
+                        {displayName}
+                      </span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                        {new Date(comment.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </Link>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <div style={{ 
+                      width: '40px', 
+                      height: '40px', 
+                      borderRadius: '12px', 
+                      background: 'var(--surface-2)', 
+                      color: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      fontWeight: 800, 
+                      fontSize: '0.9rem',
+                      border: '1px solid var(--glass-border)'
+                    }}>
+                      {initial}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.95rem', letterSpacing: '0.5px' }}>
+                        {displayName}
+                      </span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                        {new Date(comment.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                )}
                 {isOwner && (
                   <button 
                     onClick={() => handleCommentDelete(comment.id)}

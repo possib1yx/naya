@@ -1,8 +1,8 @@
 const cron = require('node-cron');
 const db = require('../db');
 
-// Run every hour to update rankings and filter low-quality comments
-cron.schedule('0 * * * *', async () => {
+// Run once per day at midnight to update rankings (reduced from hourly to save Firestore quota)
+cron.schedule('0 0 * * *', async () => {
   console.log('Running background job: Ranking & Filtering...');
   
   try {

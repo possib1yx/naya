@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
 import { useState, useRef, useEffect } from 'react';
 import '../index.css';
+import SearchBar from './SearchBar';
 
 const Layout = ({ children }) => {
   const { user, logout } = useAuth();
@@ -36,8 +37,12 @@ const Layout = ({ children }) => {
           <Link to="/" className="logo" style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--secondary)', letterSpacing: '1px' }}>
             जनआवाज
           </Link>
+
+          <SearchBar />
+
           <nav style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
             <Link to="/top" style={{ fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Top Ideas</Link>
+            {user && <Link to="/messages" style={{ fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Messages</Link>}
             <Link to="/for-pm" style={{ fontWeight: 700, color: 'var(--secondary)', fontSize: '0.95rem' }}>For the PM</Link>
             {user ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>

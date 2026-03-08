@@ -2,9 +2,18 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
+// Simple in-memory cache to reduce Firestore reads (saves quota)
+const cache = {};
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const getCache = (key) => cache[key] && Date.now() < cache[key].expiry ? cache[key].data : null;
+const setCache = (key, data) => { cache[key] = { data, expiry: Date.now() + CACHE_TTL }; };
+
 // Get trending manifestos
 router.get('/trending', async (req, res) => {
   try {
+    const cached = getCache('trending');
+    if (cached) return res.json(cached);
+
     const manifestosSnapshot = await db.collection('manifestos').limit(20).get();
     
     const manifestos = [];
@@ -17,10 +26,11 @@ router.get('/trending', async (req, res) => {
       .sort((a, b) => ((b.voteCount || 0) + (b.commentCount || 0)) - ((a.voteCount || 0) + (a.commentCount || 0)))
       .slice(0, 5);
 
+    setCache('trending', trending);
     res.json(trending);
   } catch (error) {
     console.error('Error fetching trending manifestos:', error);
-    res.status(500).json({ error: error.message });
+    res.json(getCache('trending') || []);
   }
 });
 
@@ -46,7 +56,10 @@ router.get('/top', async (req, res) => {
 // Get all manifestos
 router.get('/', async (req, res) => {
   try {
-    const manifestosSnapshot = await db.collection('manifestos').get();
+    const cached = getCache('all');
+    if (cached) return res.json(cached);
+
+    const manifestosSnapshot = await db.collection('manifestos').limit(50).get();
     const manifestos = [];
     manifestosSnapshot.forEach(doc => {
       manifestos.push({ id: doc.id, ...doc.data() });

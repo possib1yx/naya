@@ -138,6 +138,8 @@ const Layout = ({ children }) => {
           <p style={{ fontSize: '0.85rem', fontWeight: 700, letterSpacing: '2px', color: 'var(--primary)', margin: 0 }}>&copy; 2026 जनआवाज. ALL RIGHTS RESERVED.</p>
           
           <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Link to="/about" style={{ color: 'var(--text-secondary)', fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>About Us</Link>
+            <Link to="/privacy" style={{ color: 'var(--text-secondary)', fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Privacy Policy</Link>
             <a href="https://www.instagram.com/dahal.binayak/?hl=en" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600, fontSize: '0.9rem', transition: 'color 0.3s ease' }} onMouseOver={(e) => e.target.style.color = 'var(--secondary)'} onMouseOut={(e) => e.target.style.color = 'var(--text-secondary)'}>
               <i className="fab fa-instagram" style={{ fontSize: '1.2rem' }}></i> @dahal.binayak
             </a>

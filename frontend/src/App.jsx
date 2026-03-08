@@ -10,6 +10,8 @@ import CreateTopic from './pages/CreateTopic';
 import Profile from './pages/Profile';
 import ActiveDiscussions from './pages/ActiveDiscussions';
 import ForPM from './pages/ForPM';
+import AboutUs from './pages/AboutUs';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/discussions" element={<ActiveDiscussions />} />
         <Route path="/for-pm" element={<ForPM />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
       </Routes>
     </Layout>
   );

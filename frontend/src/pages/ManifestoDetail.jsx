@@ -163,7 +163,7 @@ const ManifestoDetail = () => {
   const handleCommentDelete = async (commentId) => {
     if (!window.confirm('Discard this perspective?')) return;
     try {
-      const response = await fetch(`${API_URL}/comments/${commentId}?manifestoId=${id}`, {
+      const response = await fetch(`${API_URL}/comments/${commentId}?manifestoId=${id}&userId=${user.dbId || user.uid}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
       });

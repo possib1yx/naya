@@ -22,6 +22,8 @@ It looks like **Git** is not installed on your computer yet. Here is the easiest
    - **Start Command**: `node src/server.js`
 4. Click **"Advanced" -> "Add Environment Variable"**:
    - Key: `PORT` | Value: `10000`
+   - Key: `FIREBASE_SERVICE_ACCOUNT`
+   - Value: (Paste the **entire content** of your `backend/firebase-service-account.json` file here)
 5. Click **"Create Web Service"**.
 6. **Copy the URL** Render gives you (e.g., `https://balen-backend.onrender.com`).
 
@@ -35,9 +37,8 @@ It looks like **Git** is not installed on your computer yet. Here is the easiest
    - **Framework Preset**: `Vite`
 4. **Environment Variables** (VERY IMPORTANT):
    - Name: `VITE_API_URL`
-   - Value: (Paste the URL you copied from Render in Step 2)
+   - Value: `https://your-backend-url.onrender.com/api` (Make sure to add **/api** at the end!)
 5. Click **"Deploy"**.
-
 ---
 
 ### ✅ You are Live!

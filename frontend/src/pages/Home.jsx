@@ -28,7 +28,7 @@ const Home = () => {
       setLoading(false);
     } catch (err) {
       console.error(err);
-      setError('Could not connect to the backend server. Make sure it is running.');
+      setError(`Could not connect to the backend at ${API_URL}. Please check your VITE_API_URL setting on Vercel.`);
       setLoading(false);
     }
   };
@@ -156,7 +156,38 @@ const Home = () => {
 
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '60px', marginBottom: '100px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
-          {/* Active Discussions Section */}
+          {/* Priorities for the PM Section */}
+          <section>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ width: '4px', height: '32px', background: '#dc2626', borderRadius: '2px' }}></div>
+                <h2 style={{ fontSize: '2.2rem', letterSpacing: '-1px', color: 'var(--primary)' }}>Priorities for the PM</h2>
+              </div>
+              <Link to="/for-pm" style={{ color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>View All Demands</Link>
+            </div>
+
+            {error && (
+              <div className="glass-effect" style={{ background: 'rgba(220, 38, 38, 0.05)', borderColor: 'rgba(220, 38, 38, 0.1)', padding: '24px', marginBottom: '32px', textAlign: 'center' }}>
+                <p style={{ color: '#dc2626', fontWeight: 600 }}>{error}</p>
+              </div>
+            )}
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
+              {manifestos.filter(m => m.category === 'Citizen Demand').slice(0, 3).map(topic => (
+                <ManifestoCard
+                  key={topic.id}
+                  {...topic}
+                  onVote={handleTopicVote}
+                  onDelete={handleTopicDelete}
+                />
+              ))}
+              {manifestos.filter(m => m.category === 'Citizen Demand').length === 0 && !loading && (
+                <p style={{ color: 'var(--text-muted)', textAlign: 'center', gridColumn: '1/-1', padding: '40px' }}>No urgent tasks currently listed for the PM.</p>
+              )}
+            </div>
+          </section>
+
+          {/* Active Discussions Section (Balen) */}
           <section>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -166,17 +197,11 @@ const Home = () => {
               <Link to="/discussions" style={{ color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Explore All</Link>
             </div>
 
-            {error && (
-              <div className="glass-effect" style={{ background: 'rgba(220, 38, 38, 0.05)', borderColor: 'rgba(220, 38, 38, 0.1)', padding: '24px', marginBottom: '32px', textAlign: 'center' }}>
-                <p style={{ color: '#dc2626', fontWeight: 600 }}>{error}</p>
-              </div>
-            )}
-
             {loading ? (
-              <div style={{ textAlign: 'center', padding: '100px', color: 'var(--text-muted)' }}>Loading ideas...</div>
+              <div style={{ textAlign: 'center', padding: '100px', color: 'var(--text-muted)' }}>Loading visions...</div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
-                {manifestos.slice(0, 6).map(topic => (
+                {manifestos.filter(m => m.createdById === 'SYSTEM').slice(0, 6).map(topic => (
                   <ManifestoCard
                     key={topic.id}
                     id={topic.id}
@@ -193,31 +218,6 @@ const Home = () => {
               </div>
             )}
           </section>
-
-            {/* Priorities for the PM Section */}
-            <section>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div style={{ width: '4px', height: '32px', background: '#dc2626', borderRadius: '2px' }}></div>
-                  <h2 style={{ fontSize: '2.2rem', letterSpacing: '-1px', color: 'var(--primary)' }}>Priorities for the PM</h2>
-                </div>
-                <Link to="/for-pm" style={{ color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>View All Demands</Link>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
-                {manifestos.filter(m => m.category === 'Citizen Demand').slice(0, 3).map(topic => (
-                  <ManifestoCard
-                    key={topic.id}
-                    {...topic}
-                    onVote={handleTopicVote}
-                    onDelete={handleTopicDelete}
-                  />
-                ))}
-                {manifestos.filter(m => m.category === 'Citizen Demand').length === 0 && (
-                  <p style={{ color: 'var(--text-muted)', textAlign: 'center', gridColumn: '1/-1', padding: '40px' }}>No urgent tasks currently listed for the PM.</p>
-                )}
-              </div>
-            </section>
 
             {/* Trending Discussions Section */}
           <section>

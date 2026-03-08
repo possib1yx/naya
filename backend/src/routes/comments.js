@@ -58,10 +58,14 @@ router.get('/manifesto/:id', async (req, res) => {
 // Delete a comment
 router.delete('/:id', async (req, res) => {
   const manifestoId = req.body.manifestoId || req.query.manifestoId;
-  console.log(`[DELETE DEBUG] Attempting to delete comment: ${req.params.id} from manifesto: ${manifestoId}`);
-  if (!manifestoId) {
-    return res.status(400).json({ error: 'manifestoId is required' });
+  const userId = req.body.userId || req.query.userId;
+  
+  console.log(`[DELETE DEBUG] Attempting to delete comment: ${req.params.id} (User: ${userId}, Manifesto: ${manifestoId})`);
+  
+  if (!manifestoId || !userId) {
+    return res.status(400).json({ error: 'manifestoId and userId are required' });
   }
+
   try {
     const commentRef = db.collection('comments').doc(req.params.id);
     const commentDoc = await commentRef.get();
@@ -70,24 +74,29 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Comment not found' });
     }
 
-    // 1. Delete sub-collection votes (old structure)
-    const subVotesSnapshot = await commentRef.collection('votes').get();
-    const batch = db.batch();
-    subVotesSnapshot.forEach(doc => batch.delete(doc.ref));
-    
-    // 2. Delete from top-level votes collection (if stored there by commentId)
-    const topVotesSnapshot = await db.collection('votes').where('commentId', '==', req.params.id).get();
-    topVotesSnapshot.forEach(doc => batch.delete(doc.ref));
+    const commentData = commentDoc.data();
 
+    // OWNERSHIP CHECK
+    if (commentData.userId !== userId) {
+      console.warn(`[DELETE AUTH] Unauthorized delete attempt by ${userId} for comment owned by ${commentData.userId}`);
+      return res.status(403).json({ error: 'Unauthorized: You can only delete your own comments.' });
+    }
+
+    // 1. Delete associated votes (flat collection)
+    const votesSnapshot = await db.collection('votes').where('commentId', '==', req.params.id).get();
+    const batch = db.batch();
+    votesSnapshot.forEach(doc => batch.delete(doc.ref));
+
+    // 2. Delete the comment itself
     batch.delete(commentRef);
     await batch.commit();
 
-    // Decrement commentCount on manifesto
+    // 3. Decrement commentCount on manifesto
     await db.collection('manifestos').doc(manifestoId).update({
       commentCount: admin.firestore.FieldValue.increment(-1)
     });
 
-    res.json({ message: 'Comment deleted successfully' });
+    res.json({ message: 'Perspective discarded successfully.' });
   } catch (error) {
     console.error('Error deleting comment:', error);
     res.status(500).json({ error: error.message });

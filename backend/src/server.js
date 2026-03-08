@@ -17,6 +17,16 @@ app.use('/api/votes', require('./routes/votes'));
 app.use('/api/top', require('./routes/top'));
 app.use('/api/users', require('./routes/users'));
 
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error('[GLOBAL ERROR]', err.stack);
+  res.status(500).json({ 
+    error: 'Internal Server Error', 
+    details: err.message,
+    path: req.path
+  });
+});
+
 // Basic Route
 app.get('/', (req, res) => {
   res.send('JanAawaz Backend API is running...');

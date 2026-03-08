@@ -57,12 +57,15 @@ router.get('/manifesto/:id', async (req, res) => {
 
 // Delete a comment
 router.delete('/:id', async (req, res) => {
-  const manifestoId = req.body.manifestoId || req.query.manifestoId;
-  const userId = req.body.userId || req.query.userId;
+  const manifestoId = (req.body && req.body.manifestoId) || req.query.manifestoId;
+  const userId = (req.body && req.body.userId) || req.query.userId;
+  const commentId = req.params.id;
   
-  console.log(`[DELETE DEBUG] Attempting to delete comment: ${req.params.id} (User: ${userId}, Manifesto: ${manifestoId})`);
+  console.log(`[DELETE REQUEST] Comment: ${commentId}, User: ${userId}, Manifesto: ${manifestoId}`);
+  console.log(`[DEBUG] Request Headers:`, req.headers['content-type']);
   
   if (!manifestoId || !userId) {
+    console.error(`[DELETE ERROR] Missing params: manifestoId=${manifestoId}, userId=${userId}`);
     return res.status(400).json({ error: 'manifestoId and userId are required' });
   }
 
@@ -82,18 +85,35 @@ router.delete('/:id', async (req, res) => {
       return res.status(403).json({ error: 'Unauthorized: You can only delete your own comments.' });
     }
 
-    // 1. Delete associated votes (flat collection)
-    const votesSnapshot = await db.collection('votes').where('commentId', '==', req.params.id).get();
     const batch = db.batch();
+    let deletedCount = 1; // Count the main comment
+
+    // 1. Find and delete all child comments (replies)
+    const childCommentsSnapshot = await db.collection('comments')
+      .where('parentId', '==', req.params.id)
+      .get();
+    
+    for (const childDoc of childCommentsSnapshot.docs) {
+      // Delete votes for each child comment (subcollection)
+      const childVotesSnapshot = await childDoc.ref.collection('votes').get();
+      childVotesSnapshot.forEach(voteDoc => batch.delete(voteDoc.ref));
+      
+      // Delete the child comment itself
+      batch.delete(childDoc.ref);
+      deletedCount++;
+    }
+
+    // 2. Delete votes for the main comment (subcollection)
+    const votesSnapshot = await commentRef.collection('votes').get();
     votesSnapshot.forEach(doc => batch.delete(doc.ref));
 
-    // 2. Delete the comment itself
+    // 3. Delete the comment itself
     batch.delete(commentRef);
     await batch.commit();
 
-    // 3. Decrement commentCount on manifesto
+    // 4. Decrement commentCount on manifesto (for all deleted comments)
     await db.collection('manifestos').doc(manifestoId).update({
-      commentCount: admin.firestore.FieldValue.increment(-1)
+      commentCount: admin.firestore.FieldValue.increment(-deletedCount)
     });
 
     res.json({ message: 'Perspective discarded successfully.' });

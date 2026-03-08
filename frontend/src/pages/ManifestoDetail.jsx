@@ -175,7 +175,7 @@ const ManifestoDetail = () => {
       }
     } catch (error) {
       console.error('Deletion error:', error);
-      alert('Network instability detected. Please try again.');
+      alert(`Connection failed to ${API_URL}/comments/${commentId}. \n\nDetails: ${error.message}\n\nCheck if your backend is running and matches this URL.`);
     }
   };
 

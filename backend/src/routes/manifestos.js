@@ -126,22 +126,38 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Manifesto not found' });
     }
 
-    // 1. Find all comments related to this manifesto in the flat collection
+    // 1. Find all comments related to this manifesto
     const commentsSnapshot = await db.collection('comments')
       .where('manifestoId', '==', req.params.id)
       .get();
     
-    // 2. Delete all related comments and their votes
     const batch = db.batch();
+    
+    // 2. Delete all related comments, their child comments, and their votes
     for (const commentDoc of commentsSnapshot.docs) {
-      const vSnap = await commentDoc.ref.collection('votes').get();
-      vSnap.forEach(vDoc => batch.delete(vDoc.ref));
+      // Delete votes subcollection for this comment
+      const votesSnapshot = await commentDoc.ref.collection('votes').get();
+      votesSnapshot.forEach(voteDoc => batch.delete(voteDoc.ref));
+      
+      // Find and delete all child comments (replies) and their votes
+      const childCommentsSnapshot = await db.collection('comments')
+        .where('parentId', '==', commentDoc.id)
+        .get();
+      
+      for (const childDoc of childCommentsSnapshot.docs) {
+        // Delete votes for child comment
+        const childVotesSnapshot = await childDoc.ref.collection('votes').get();
+        childVotesSnapshot.forEach(voteDoc => batch.delete(voteDoc.ref));
+        batch.delete(childDoc.ref);
+      }
+      
+      // Delete the comment itself
       batch.delete(commentDoc.ref);
     }
     
-    // 3. Delete manifesto's own votes (if any - assuming top-level votes exists)
-    const votesSnapshot = await docRef.collection('votes').get();
-    votesSnapshot.forEach(vDoc => batch.delete(vDoc.ref));
+    // 3. Delete manifesto's own votes subcollection
+    const manifestoVotesSnapshot = await docRef.collection('votes').get();
+    manifestoVotesSnapshot.forEach(voteDoc => batch.delete(voteDoc.ref));
 
     // 4. Delete the manifesto document
     batch.delete(docRef);

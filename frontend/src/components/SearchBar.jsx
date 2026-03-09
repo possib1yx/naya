@@ -50,7 +50,7 @@ const SearchBar = () => {
     }, [query]);
 
     return (
-        <div style={{ position: 'relative', width: '300px' }} ref={dropdownRef}>
+        <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }} ref={dropdownRef}>
             <div style={{ position: 'relative' }}>
                 <i className="fas fa-search" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.9rem' }}></i>
                 <input

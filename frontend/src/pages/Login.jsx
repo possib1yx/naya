@@ -61,8 +61,8 @@ const Login = () => {
   }
 
   return (
-    <div style={{ maxWidth: '450px', margin: '100px auto' }}>
-      <div className="glass-effect animate-fade-in" style={{ padding: '50px', border: '1px solid rgba(255,255,255,0.05)' }}>
+    <div style={{ maxWidth: '450px', margin: 'clamp(24px, 8vw, 100px) auto', padding: '0 16px' }}>
+      <div className="glass-effect animate-fade-in" style={{ padding: 'clamp(24px, 5vw, 50px)', border: '1px solid rgba(255,255,255,0.05)' }}>
         <h2 style={{ marginBottom: '32px', textAlign: 'center', fontSize: '2rem', letterSpacing: '-1px', fontWeight: 900 }}>
           {isSignUp ? 'ESTABLISH IDENTITY' : 'WELCOME BACK'}
         </h2>

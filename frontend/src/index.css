@@ -112,6 +112,11 @@ button {
   100% { transform: translateY(0px); }
 }
 
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -172,4 +177,170 @@ input:-webkit-autofill:active {
   transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.4);
   filter: brightness(1.1);
+}
+
+/* ============================================
+   RESPONSIVE LAYOUT UTILITIES
+   ============================================ */
+
+/* Home page main 2-col grid */
+.home-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 60px;
+  margin-bottom: 100px;
+}
+
+/* TopIdeas page 12-col grid */
+.top-ideas-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 40px;
+  padding: 0 24px;
+}
+.col-span-8 { grid-column: span 8; }
+.col-span-4 { grid-column: span 4; }
+
+/* Visibility helpers */
+.desktop-only { display: flex !important; }
+.mobile-only   { display: none !important; }
+
+/* Profile header */
+.profile-header-flex {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+/* Mobile nav overlay — hidden by default */
+.mobile-menu-overlay {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  background: rgba(248, 250, 252, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  padding: 20px 24px 28px;
+  gap: 6px;
+  animation: slideDown 0.2s ease;
+}
+.mobile-menu-overlay.open {
+  display: flex;
+}
+
+/* Mobile nav link style */
+.mobile-nav-link {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  transition: background 0.2s, color 0.2s;
+  text-align: left;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+}
+.mobile-nav-link:hover {
+  background: var(--surface-2);
+  color: var(--primary);
+}
+.mobile-nav-link.red {
+  color: var(--secondary);
+  font-weight: 700;
+}
+
+/* Mobile nav divider */
+.mobile-nav-divider {
+  height: 1px;
+  background: var(--glass-border);
+  margin: 8px 0;
+}
+
+/* ============================================
+   BREAKPOINT: TABLET (≤ 900px)
+   ============================================ */
+@media (max-width: 900px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .top-ideas-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 0 16px;
+  }
+  .col-span-8, .col-span-4 {
+    grid-column: span 1;
+  }
+}
+
+/* ============================================
+   BREAKPOINT: MOBILE (≤ 768px)
+   ============================================ */
+@media (max-width: 768px) {
+  .desktop-only { display: none !important; }
+  .mobile-only   { display: flex !important; }
+
+  main {
+    padding: 24px 16px !important;
+  }
+
+  footer {
+    padding: 40px 16px !important;
+  }
+
+  /* Home */
+  .home-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 60px;
+  }
+
+  /* Top Ideas */
+  .top-ideas-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 0 8px;
+  }
+  .col-span-8, .col-span-4 {
+    grid-column: span 1;
+  }
+
+  /* Profile */
+  .profile-header-flex {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 24px !important;
+  }
+
+  /* Chat sidebar on mobile — React toggles display via state */
+  .chat-back-btn {
+    display: flex !important;
+  }
+
+  /* Chat height on mobile (narrower viewport, navbar takes 80px) */
+  .chat-layout-responsive {
+    height: calc(100vh - 104px) !important;
+  }
+}
+
+/* ============================================
+   BREAKPOINT: SMALL MOBILE (≤ 480px)
+   ============================================ */
+@media (max-width: 480px) {
+  .home-grid {
+    gap: 20px;
+  }
+  .top-ideas-grid {
+    padding: 0;
+  }
 }

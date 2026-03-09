@@ -334,8 +334,8 @@ const ManifestoDetail = () => {
 
   return (
     <div style={{ maxWidth: '900px', margin: '0 auto', paddingBottom: '100px' }}>
-      <div className="glass-effect animate-fade-in" style={{ padding: '60px', marginBottom: '60px', border: '1px solid var(--glass-border)', background: 'var(--surface-1)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+      <div className="glass-effect animate-fade-in" style={{ padding: 'clamp(20px, 5vw, 60px)', marginBottom: '60px', border: '1px solid var(--glass-border)', background: 'var(--surface-1)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '12px' }}>
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--secondary)', background: 'rgba(220, 38, 38, 0.05)', padding: '6px 16px', borderRadius: '100px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', border: '1px solid rgba(220, 38, 38, 0.1)' }}>
               {manifesto.category || 'POLICY VISION'}
@@ -373,7 +373,7 @@ const ManifestoDetail = () => {
           </div>
         </div>
         
-        <h1 style={{ fontSize: '3.5rem', marginBottom: '32px', letterSpacing: '-2px', lineHeight: 1.1, fontWeight: 900, color: 'var(--primary)' }}>{manifesto.title}</h1>
+        <h1 style={{ fontSize: 'clamp(1.8rem, 5vw, 3.5rem)', marginBottom: '32px', letterSpacing: 'clamp(-1px, -0.3vw, -2px)', lineHeight: 1.1, fontWeight: 900, color: 'var(--primary)' }}>{manifesto.title}</h1>
         <p style={{ fontSize: '1.3rem', color: 'var(--text-secondary)', marginBottom: '0', lineHeight: '1.8', fontWeight: 400 }}>{manifesto.description}</p>
       </div>
 

@@ -154,19 +154,20 @@ const Profile = () => {
     return (
         <div style={{ maxWidth: '1000px', margin: '60px auto', paddingBottom: '100px' }}>
             <div className="glass-effect animate-fade-in" style={{ padding: '48px', marginBottom: '60px', background: 'var(--surface-1)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
+                <div className="profile-header-flex">
                     <div style={{ 
-                        width: '140px', 
-                        height: '140px', 
+                        width: 'clamp(80px, 15vw, 140px)', 
+                        height: 'clamp(80px, 15vw, 140px)', 
                         borderRadius: '40px', 
                         background: 'linear-gradient(135deg, var(--secondary), #f87171)', 
                         color: 'white', 
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center', 
-                        fontSize: '4rem', 
+                        fontSize: 'clamp(2rem, 5vw, 4rem)', 
                         fontWeight: 900,
-                        boxShadow: '0 20px 40px rgba(220, 38, 38, 0.15)'
+                        boxShadow: '0 20px 40px rgba(220, 38, 38, 0.15)',
+                        flexShrink: 0
                     }}>
                         {profile.username ? profile.username[0].toUpperCase() : 'U'}
                     </div>
@@ -226,7 +227,7 @@ const Profile = () => {
                 </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '40px', borderBottom: '1px solid var(--glass-border)', marginBottom: '40px', paddingLeft: '20px' }}>
+            <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--glass-border)', marginBottom: '40px', paddingLeft: '20px', overflowX: 'auto' }}>
                 <button 
                     onClick={() => setActiveTab('visions')}
                     style={{ 

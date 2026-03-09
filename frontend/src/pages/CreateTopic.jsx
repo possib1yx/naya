@@ -69,10 +69,10 @@ const CreateTopic = () => {
 
     return (
         <div style={{ maxWidth: '700px', margin: '40px auto' }}>
-            <div className="glass-effect animate-fade-in" style={{ padding: '60px', background: 'var(--surface-1)' }}>
+            <div className="glass-effect animate-fade-in" style={{ padding: 'clamp(20px, 5vw, 60px)', background: 'var(--surface-1)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '48px' }}>
                     <div style={{ width: '4px', height: '40px', background: 'var(--secondary)', borderRadius: '2px' }}></div>
-                    <h2 style={{ fontSize: '2.5rem', letterSpacing: '-2px', fontWeight: 900, color: 'var(--text-primary)' }}>PROPOSE A VISION</h2>
+                    <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', letterSpacing: 'clamp(-1px, -0.2vw, -2px)', fontWeight: 900, color: 'var(--text-primary)' }}>PROPOSE A VISION</h2>
                 </div>
 
                 {error && <div style={{ color: '#ef4444', marginBottom: '32px', padding: '16px', background: 'rgba(239, 68, 68, 0.05)', borderRadius: 'var(--radius-md)', fontSize: '0.9rem', border: '1px solid rgba(239, 68, 68, 0.1)' }}>{error}</div>}

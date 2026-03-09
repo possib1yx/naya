@@ -184,7 +184,7 @@ const Home = () => {
   return (
     <>
       <section className="hero animate-float" style={{ textAlign: 'center', marginBottom: '100px', paddingTop: '40px' }}>
-        <h1 style={{ fontSize: '4.5rem', marginBottom: '24px', letterSpacing: '-3px', lineHeight: 1, fontWeight: 900 }}>
+        <h1 style={{ fontSize: 'clamp(2rem, 6vw, 4.5rem)', marginBottom: '24px', letterSpacing: 'clamp(-1px, -0.3vw, -3px)', lineHeight: 1, fontWeight: 900 }}>
           Building the Nepal <span style={{ 
             background: 'linear-gradient(to right, var(--secondary), #f87171)', 
             WebkitBackgroundClip: 'text', 
@@ -192,22 +192,22 @@ const Home = () => {
             textShadow: '0 10px 30px rgba(0, 0, 0, 0.05)'
           }}>of Tomorrow</span>
         </h1>
-        <p style={{ fontSize: '1.4rem', color: 'var(--text-secondary)', maxWidth: '800px', margin: '0 auto', marginBottom: '48px', fontWeight: 500, lineHeight: 1.6 }}>
+        <p style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.4rem)', color: 'var(--text-secondary)', maxWidth: '800px', margin: '0 auto', marginBottom: '48px', fontWeight: 500, lineHeight: 1.6 }}>
           A community-driven sanctuary to debate, refine, and champion the policies that will define our future.
         </p>
-        <div style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
           {user && (
-            <Link to="/create-topic" className="btn-premium" style={{ padding: '18px 48px', fontSize: '1.1rem', letterSpacing: '0.5px', background: 'var(--secondary)', color: 'white' }}>
+            <Link to="/create-topic" className="btn-premium" style={{ padding: '16px 36px', fontSize: 'clamp(0.95rem, 2vw, 1.1rem)', letterSpacing: '0.5px', background: 'var(--secondary)', color: 'white' }}>
               Propose a Vision
             </Link>
           )}
-          <Link to="/top" style={{ padding: '18px 48px', fontSize: '1.1rem', fontWeight: 700, borderRadius: 'var(--radius-md)', border: '1px solid var(--glass-border)', color: 'var(--primary)', background: 'var(--surface-1)' }}>
+          <Link to="/top" style={{ padding: '16px 36px', fontSize: 'clamp(0.95rem, 2vw, 1.1rem)', fontWeight: 700, borderRadius: 'var(--radius-md)', border: '1px solid var(--glass-border)', color: 'var(--primary)', background: 'var(--surface-1)' }}>
             Explore Top Ideas
           </Link>
         </div>
       </section>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '60px', marginBottom: '100px' }}>
+      <div className="home-grid">
         <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
           {/* Priorities for the PM Section */}
           <section>
@@ -276,7 +276,7 @@ const Home = () => {
           <section>
             <div className="glass-effect" style={{ padding: '48px', background: 'var(--surface-1)' }}>
               <h2 style={{ marginBottom: '40px', fontSize: '2rem', color: 'var(--primary)' }}>Trending Now</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '32px' }}>
                 {trending.length > 0 ? trending.map(topic => (
                   <div key={topic.id} className="hover-glow" style={{ padding: '24px', background: 'var(--surface-2)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)', transition: 'all 0.3s ease' }}>
                     <Link to={`/manifesto/${topic.id}`} style={{ fontWeight: 700, color: 'var(--text-primary)', textDecoration: 'none', fontSize: '1.2rem', display: 'block', marginBottom: '12px' }}>

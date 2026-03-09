@@ -145,9 +145,9 @@ const TopCommentsPage = () => {
                 </div>
             </header>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '40px', padding: '0 24px' }}>
+            <div className="top-ideas-grid">
                 {/* Left: Top Visions (Main Content) */}
-                <div style={{ gridColumn: 'span 8' }}>
+                <div className="col-span-8">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.5px' }}>LEADING VISIONS</h2>
                     </div>
@@ -182,7 +182,7 @@ const TopCommentsPage = () => {
                 </div>
 
                 {/* Right: Sidebar Content */}
-                <div style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column', gap: '60px' }}>
+                <div className="col-span-4" style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
                     {/* Daily Top */}
                     <section>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>

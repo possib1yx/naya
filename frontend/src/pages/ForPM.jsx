@@ -69,13 +69,13 @@ const ForPM = () => {
     return (
         <div style={{ maxWidth: '1200px', margin: '0 auto', paddingBottom: '100px' }}>
             <header style={{ marginBottom: '60px', textAlign: 'center' }}>
-                <h1 style={{ fontSize: '3.5rem', fontWeight: 900, letterSpacing: '-2px', marginBottom: '16px' }}>
+                <h1 style={{ fontSize: 'clamp(1.8rem, 5vw, 3.5rem)', fontWeight: 900, letterSpacing: 'clamp(-1px, -0.3vw, -2px)', marginBottom: '16px' }}>
                     FOR THE <span style={{ color: 'var(--secondary)' }}>PRIME MINISTER</span>
                 </h1>
-                <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', fontWeight: 500, maxWidth: '800px', margin: '0 auto' }}>
+                <p style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.2rem)', color: 'var(--text-secondary)', fontWeight: 500, maxWidth: '800px', margin: '0 auto' }}>
                     Directly outlining the urgent tasks and priorities the people of Nepal demand from their leadership.
                 </p>
-                <div style={{ marginTop: '24px', display: 'flex', gap: '16px', justifyContent: 'center', alignItems: 'center' }}>
+                <div style={{ marginTop: '24px', display: 'flex', gap: '12px', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
                     <div style={{ padding: '8px 24px', background: 'var(--surface-2)', borderRadius: '100px', border: '1px solid var(--glass-border)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-muted)' }}>
                         DEMANDS WITH HIGHEST CONSENSUS ARE HIGHLIGHTED
                     </div>

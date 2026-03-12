@@ -12,7 +12,10 @@ import ActiveDiscussions from './pages/ActiveDiscussions';
 import ForPM from './pages/ForPM';
 import AboutUs from './pages/AboutUs';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 import ChatPage from './pages/ChatPage';
+import Blogs from './pages/Blogs';
+import CookieConsent from './components/CookieConsent';
 
 function App() {
   return (
@@ -29,8 +32,11 @@ function App() {
         <Route path="/for-pm" element={<ForPM />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
         <Route path="/messages" element={<ChatPage />} />
+        <Route path="/blogs" element={<Blogs />} />
       </Routes>
+      <CookieConsent />
     </Layout>
   );
 }

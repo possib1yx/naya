@@ -54,6 +54,7 @@ const Layout = ({ children }) => {
 
           {/* Desktop Nav */}
           <nav className="desktop-only" style={{ alignItems: 'center', gap: '28px' }}>
+            <Link to="/blogs" style={{ fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.95rem', whiteSpace: 'nowrap' }}>Blogs</Link>
             <Link to="/top" style={{ fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.95rem', whiteSpace: 'nowrap' }}>Top Ideas</Link>
             {user && <Link to="/messages" style={{ fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.95rem', whiteSpace: 'nowrap' }}>Messages</Link>}
             <Link to="/for-pm" style={{ fontWeight: 700, color: 'var(--secondary)', fontSize: '0.95rem', whiteSpace: 'nowrap' }}>For the PM</Link>
@@ -187,6 +188,7 @@ const Layout = ({ children }) => {
           <SearchBar />
         </div>
         <div className="mobile-nav-divider" />
+        <Link to="/blogs" onClick={handleMenuLinkClick} className="mobile-nav-link">Blogs</Link>
         <Link to="/top" onClick={handleMenuLinkClick} className="mobile-nav-link">Top Ideas</Link>
         <Link to="/for-pm" onClick={handleMenuLinkClick} className="mobile-nav-link red">For the PM</Link>
         {user && <Link to="/messages" onClick={handleMenuLinkClick} className="mobile-nav-link">Messages</Link>}
@@ -210,6 +212,7 @@ const Layout = ({ children }) => {
           <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', justifyContent: 'center' }}>
             <Link to="/about" style={{ color: 'var(--text-secondary)', fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>About Us</Link>
             <Link to="/privacy" style={{ color: 'var(--text-secondary)', fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Privacy Policy</Link>
+            <Link to="/terms" style={{ color: 'var(--text-secondary)', fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Terms of Service</Link>
             <a href="https://www.instagram.com/dahal.binayak/?hl=en" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600, fontSize: '0.9rem', transition: 'color 0.3s ease' }} onMouseOver={(e) => e.target.style.color = 'var(--secondary)'} onMouseOut={(e) => e.target.style.color = 'var(--text-secondary)'}>
               <i className="fab fa-instagram" style={{ fontSize: '1.2rem' }}></i> @dahal.binayak
             </a>

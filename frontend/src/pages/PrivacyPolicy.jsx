@@ -40,9 +40,12 @@ const PrivacyPolicy = () => {
             <li>Send important service notifications</li>
           </ul>
 
-          <h3 style={{ color: 'var(--primary)', marginBottom: '16px', fontSize: '1.5rem' }}>Cookies and Tracking Technologies</h3>
+          <h3 style={{ color: 'var(--primary)', marginBottom: '16px', fontSize: '1.5rem' }}>Cookies and Third-Party Advertising</h3>
+          <p style={{ marginBottom: '16px' }}>
+            Our website uses cookies or similar technologies to improve user experience, remember login sessions, analyze website traffic, and optimize platform performance. You can control cookie settings through your browser.
+          </p>
           <p style={{ marginBottom: '40px' }}>
-            Our website may use cookies or similar technologies to improve user experience, remember login sessions, analyze website traffic, and optimize platform performance. You can control cookie settings through your browser.
+            <strong>Google AdSense:</strong> We use Google AdSense to display ads on our site. Third party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites. Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our site and/or other sites on the Internet. Users may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--secondary)' }}>Ads Settings</a>.
           </p>
 
           <h3 style={{ color: 'var(--primary)', marginBottom: '16px', fontSize: '1.5rem' }}>Data Security</h3>
